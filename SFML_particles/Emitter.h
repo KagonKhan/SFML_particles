@@ -1,8 +1,8 @@
 #pragma once
-#include "Particle.h"
+#include <vector>
 #include "SFML/Window.hpp"
 #include "SFML/Graphics.hpp"
-#include <vector>
+#include "ParticleData.h"
 
 class Emitter : public sf::Drawable
 {
@@ -19,7 +19,7 @@ private:
 	sf::Vector2f& mouse_position;
 
 
-	const std::size_t GENERATE_AMOUNT{ 1'000'000 };
+	const std::size_t GENERATE_AMOUNT{ 25'000 };
 
 	const std::vector<sf::Color> colors{
 		sf::Color::Black,
@@ -32,24 +32,6 @@ private:
 		sf::Color::Cyan
 	};
 
-	struct ParticleData
-	{
-		std::unique_ptr<sf::Vertex[]> pixels;
-		std::unique_ptr<sf::Vector2f[]> dir;
-
-		std::size_t count{0}, alive{0};
-
-		void generate(std::size_t amount) {
-			count = amount;
-			alive = 0;
-
-			pixels.reset(new sf::Vertex[amount]);
-			dir.reset(new sf::Vector2f[amount]);
-		}
-	};
-
-
-
-	ParticleData particles;
+	std::vector<ParticleData> particles;
 };
 

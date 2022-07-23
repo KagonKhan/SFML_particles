@@ -1,53 +1,62 @@
 #include "Emitter.h"
 #include <iostream>
 #include <ctime>
+
+
+#include <execution>
+
+
+
 Emitter::Emitter(sf::Vector2f& mouse_pos)
 	: mouse_position{ mouse_pos }
 {
-
 	srand(time(NULL));
-
-
-
-
 }
 
 void Emitter::processEvents(const sf::Event& sf_event)
 {
+	if (sf_event.type == sf::Event::MouseButtonPressed) {
+		auto speed{ 5000.f };
 
+		particles.emplace_back();
+		auto& p = particles.back();
+		p.generate(GENERATE_AMOUNT);
+
+		float radius = (float)(rand() % 100);
+
+		for (int i = 0; i < p.count; ++i) {
+			float angle{ (float)(rand() % 360000) / 1000.f };
+			auto cart_angle = sf::Vector2f{ std::cosf(angle), std::sinf(angle) };
+
+			p.pixels[i].position = mouse_position + cart_angle * radius;
+			p.velocity[i] = cart_angle * speed;
+		}
+
+	}
 }
 
 void Emitter::update(const sf::Clock& deltaClock)
 {
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-		particles.generate(GENERATE_AMOUNT);
+	auto dt = deltaClock.getElapsedTime().asSeconds();
 
-		for (int i = 0; i < particles.count; ++i) {
-			const float angle{ (float)(rand() % 360) };
-			particles.pixels[i].position = sf::Vector2f{ (float)(rand() % 1920), (float)(rand() % 1080) };
-			particles.dir[i] = sf::Vector2f{ std::cosf(angle), std::sinf(angle) };
+	for (auto& p : particles) {
+		for (int i = 0; i < p.count; ++i) {
+			p.pixels[i].position += p.velocity[i] * dt;
 		}
-
-	}
-
-	const auto speed{ 5000.f * deltaClock.getElapsedTime().asSeconds() };
-
-	for (int i = 0; i < particles.count; ++i) {
-		particles.pixels[i].position += particles.dir[i] * speed;
 	}
 }
 
 void Emitter::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	if (particles.count == 0) return;
+	if (particles.empty()) return;
 
-	const size_t batch_count{ 100 };
+	const size_t batch_count{ 250 };
 	const size_t batch_size{ GENERATE_AMOUNT / batch_count };
-	sf::VertexArray pixels{ sf::Points, batch_size };
 
-	for (int batch = 0; batch < batch_count; ++batch) {
-		target.draw(&particles.pixels[batch * batch_size], batch_size, sf::Points);
+	for (auto& p : particles) {
+		for (int batch = 0; batch < batch_count; ++batch) {
+			target.draw(&p.pixels[batch * batch_size], batch_size, sf::Points);
+		}
 	}
-
 }
 
