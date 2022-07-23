@@ -15,5 +15,7 @@ int main() {
 	// Fixed update call 1 mil part, 80 fps, 10 batch
 	// Fixed update call 1 mil part, 150 fps, 100 batches
 	// Fixed update call 1 mil part, 150 fps, 1000 batches
+	// 
+	// Fixed update call 1 mil part, 170 fps, 100 batches using memcpy
 
 }

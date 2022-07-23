@@ -25,7 +25,7 @@ void Emitter::update(const sf::Clock &deltaClock)
 			for (int i = 0; i < particles.count; ++i) {
 				float angle{ (float)(rand() % 360) };
 				particles.pixels[i].position = sf::Vector2f{ (float)(rand() % 1920), (float)(rand() % 1080) };
-				particles.pixels[i].color = colors[rand() % colors.size()];
+				//particles.pixels[i].color = colors[rand() % colors.size()];
 				particles.dir[i] = sf::Vector2f{ std::cosf(angle), std::sinf(angle) };
 			}
 		}
@@ -46,9 +46,7 @@ void Emitter::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	sf::VertexArray pixels{ sf::Points, batch_size };
 
 	for (int batch = 0; batch < batch_count; ++batch) {
-		for (int p = 0; p < batch_size; ++p) {
-			pixels[p] = particles.pixels[batch*batch_size + p];
-		}
+		memcpy(&pixels[0], &particles.pixels[batch * batch_size], batch_size * sizeof(sf::Vertex));
 		target.draw(pixels);
 	}
 	
