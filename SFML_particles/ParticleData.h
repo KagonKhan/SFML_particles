@@ -9,7 +9,8 @@ struct ParticleData
 	std::unique_ptr<sf::Color[]>	end_color;
 	std::unique_ptr<sf::Vector2f[]> velocity;
 	std::unique_ptr<sf::Vector2f[]> acceleration;
-	std::unique_ptr<float[]>		time;
+	std::unique_ptr<float[]>		alive_time;
+	std::unique_ptr<float[]>		alive_max;
 	std::unique_ptr<bool[]>			alive;
 
 	size_t count{ 0 };

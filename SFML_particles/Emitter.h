@@ -1,37 +1,18 @@
 #pragma once
 #include <vector>
-#include "SFML/Window.hpp"
-#include "SFML/Graphics.hpp"
-#include "ParticleData.h"
+#include "ParticleGenerator.h"
 
-class Emitter : public sf::Drawable
+
+class Emitter
 {
 public:
-	Emitter(sf::Vector2f& mouse_pos);
+	void emit(float dt, ParticleData& particles);
 
-	void processEvents(const sf::Event& sf_event);
-	void update(const sf::Clock& deltaClock);
-
-private:
-	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+	void addGenerator(std::shared_ptr<ParticleGenerator> gen);
 
 
-	sf::Vector2f& mouse_position;
+	float rate{ 250'000 };
 
-
-	const std::size_t GENERATE_AMOUNT{ 25'000 };
-
-	const std::vector<sf::Color> colors{
-		sf::Color::Black,
-		sf::Color::White,
-		sf::Color::Red,
-		sf::Color::Green,
-		sf::Color::Blue,
-		sf::Color::Yellow,
-		sf::Color::Magenta,
-		sf::Color::Cyan
-	};
-
-	std::vector<ParticleData> particles;
+	std::vector<std::shared_ptr<ParticleGenerator>> particle_generators;
 };
 

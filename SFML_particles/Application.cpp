@@ -15,7 +15,7 @@ Application::~Application()
 void Application::run()
 {
     while (window.isOpen()) {
-        window.clear();
+        
         processEvents();
         update();
 
@@ -35,23 +35,28 @@ void Application::processEvents()
             window.close();
         }
 
-        emitter.processEvents(sf_event);
+        system.processEvents(sf_event);
+
+        
     }
 }
 
 void Application::update()
 {
+
     mouse_position = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+
+    system.update(deltaClock.getElapsedTime().asSeconds());
 
     ImGui::SFML::Update(window, deltaClock.restart());
 
-    emitter.update(deltaClock);
 }
 
 void Application::render()
 {
-    window.draw(emitter);
+    system.render(window);
 
     ImGui::SFML::Render(window);
     window.display();
+    window.clear();
 }

@@ -10,7 +10,7 @@
 #include "imgui-SFML.h"
 
 
-#include "Emitter.h"
+#include "ParticleSystem.h"
 class Application
 {
 public:
@@ -33,7 +33,6 @@ private:
 
 	sf::Vector2f mouse_position;
 
-	Emitter emitter{mouse_position};
-
+	ParticleSystem system { mouse_position };
 };
 
